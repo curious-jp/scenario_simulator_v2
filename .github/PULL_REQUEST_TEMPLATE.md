@@ -18,14 +18,14 @@
 
 > Please delete this sentence and describe the key algorithm used in the implementation. If there is any novelty, please mention it.
 
-## Destructive Changes 💥
+## Destructive Changes 🧨💥
 
 > If this pull request changes the behavior of public functions in the traffic_simulator::API class or scenarios written in OpenSCENARIO, please include a description of the changes and a migration guide and send this pull request with a `bump major` label on this pull request, describing the changes and the migration guide.
 
 > Otherwise, please remove the "Destructive Changes" section and make sure this pull request is labeled `bump minor` or `bump patch`.
 
 > The following content is a sample. Please modify it as necessary.
-### Example Change1 🧨
+### Example Change1
 
 API::foo() was previously used but has been deprecated.
 API::bar() is recommended as its successor.

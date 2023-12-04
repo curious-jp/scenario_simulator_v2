@@ -9,7 +9,8 @@
 ### Purpose
 
 > Please delete this sentence and describe why you sent this pull request.
-> Please specify what new things this pull request will allow you to do or what problems it will solve.
+
+> Please delete this sentence and specify what new things this pull request will allow you to do or what problems it will solve.
 
 ### Specification
 

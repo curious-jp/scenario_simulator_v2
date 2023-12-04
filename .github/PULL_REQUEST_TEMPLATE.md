@@ -56,9 +56,10 @@ API::bar()
 
 All references to "You" in the following text refer to the code reviewer.
 
-- [ ] Is this pull request written in a way that is easy to read from a third-party perspective?
-- [ ] Is there sufficient information (background, purpose, specification, algorithm description, list of disruptive changes, and their migration guide) in the description of this pull request?
-- [ ] If this pull request contains a destructive change, does this pull request contain the migration guide?
-- [ ] Labels of this pull request are valid?
-- [ ] All unit tests / integration tests are included in this pull-request? If the you think adding test case is unnecessary, please describe why and cross out this line.
-- [ ] The documentation is enough? If the you think the adding documents for this pull-request, is unnecessary, please describe why please describe why and cross out this line.
+ - [ ] Is this pull request written in a way that is easy to read from a third-party perspective?
+ - [ ] Is there sufficient information (background, purpose, specification, algorithm description, list of disruptive changes, and migration guide) in the description of this pull request?
+ - [ ] If this pull request contains a destructive change, does this pull request contain the migration guide?
+ - [ ] Labels of this pull request are valid?
+ - [ ] All unit tests/integration tests are included in this pull request? If you think adding test cases is unnecessary, please describe why and cross out this line.
+ - [ ] The documentation is enough? If you think adding documents for this pull request, is unnecessary, please describe why please describe why and cross out this line.
+

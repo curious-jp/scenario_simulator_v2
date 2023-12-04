@@ -324,15 +324,17 @@ private:
   bool processForEgoStuck() {
     constexpr auto STUCK_TIME_THRESHOLD = 10.0;
     const auto stuck_time = api_.getStandStillDuration("ego");
-    // std::cerr << "stuck_time = " << stuck_time << std::endl;
 
     // 10秒以上スタックしたら、NPC全消ししてflag true、タイマースタート。
     if (stuck_time > STUCK_TIME_THRESHOLD && !ego_is_in_stuck_) {
-      std::cerr << "\n\nego is in stuck. remove all vehicles!!!\n\n" << std::endl;
+      std::cerr << "\n\nEgo is in stuck. Remove all vehicles!!!\n\n" << std::endl;
       // api_.despawnEntities();
       auto entities = api_.getEntityNames();
-      std::all_of(
-        entities.begin(), entities.end(), [&](const auto & e) { return e == api_.getEgoName() ? false :  api_.despawn(e); });
+      for (const auto & e : entities) {
+        if (e != api_.getEgoName()) {
+          api_.despawn(e);
+        }
+      }
       ego_is_in_stuck_ = true;
       sw_ego_stuck_.tic("ego_stuck");
     }
@@ -384,6 +386,10 @@ private:
     if (processForEgoStuck()) {
       return;
     }
+
+
+    spawnRoadParkingVehicles(176671, randomInt(4, 4), DIRECTION::CENTER);  // unstable
+    spawnRoadParkingVehicles(176640, randomInt(4, 4), DIRECTION::CENTER);  // unstable
 
     // やりたいこと
     // 特定のlane_idの200m以内になったら、回避対象をspawn（位置はランダム、数もランダム）

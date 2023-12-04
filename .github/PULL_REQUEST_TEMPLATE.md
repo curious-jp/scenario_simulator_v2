@@ -8,7 +8,7 @@
 
 ### Purpose
 
-> Please delete this sentence and specify what new things this pull request will allow you to do or what problems it will solve.
+> Please delete this sentence and clearly state what new things this pull request will allow you to do or what problems it will solve.
 
 ### Specification
 
@@ -18,7 +18,7 @@
 
 > Please delete this sentence and describe the key algorithm used in the implementation. If there is any novelty, please mention it.
 
-## Destructive Changes 🧨💥
+## Destructive Changes 💥
 
 > If this pull request changes the behavior of public functions in the traffic_simulator::API class or scenarios written in OpenSCENARIO, please include a description of the changes and a migration guide and send this pull request with a `bump major` label on this pull request, describing the changes and the migration guide.
 
@@ -39,6 +39,12 @@ after
 ```C++
 API::bar()
 ```
+
+## Known Limitations 🧨
+
+> If there are any limitations on the features or fixes added by this pull request, Please delete this sentence and please clearly state them.
+
+> If there are no limitations on the features or modifications added by the pull request, remove the "known limitations" section.
 
 ## Link to the issue
 

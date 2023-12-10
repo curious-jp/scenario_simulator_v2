@@ -39,7 +39,7 @@ public:
   explicit RandomScenario(const rclcpp::NodeOptions & option)
   : cpp_mock_scenarios::CppScenarioNode(
       "lanechange_left", /* ament_index_cpp::get_package_share_directory("kashiwanoha_map") + "/map" */
-      "/home/satoshi/map/odaiba_stable",
+      "/home/satoshi/map/prd_jt_cicd_virtual_B_dev",
       "lanelet2_map.osm", __FILE__, false, option),
     param_listener_(std::make_shared<random001::ParamListener>(get_node_parameters_interface())),
     engine_(seed_gen_())
@@ -223,7 +223,6 @@ private:
     }
   }
 
-
   void spawnRoadParkingVehicles(const lanelet::Id & spawn_lanelet_id, const size_t number_of_vehicles, const DIRECTION direction)
   {
     const std::string entity_name_prefix = "road_parking_" + std::to_string(spawn_lanelet_id);
@@ -251,9 +250,9 @@ private:
       if (direction == DIRECTION::CENTER) {
         return {-0.5, 0.5};
       } else if (direction == DIRECTION::LEFT) {
-        return {3.0, 1.0};
+        return {1.9, 1.0};
       } else {
-        return {-1.0, -3.0};
+        return {-1.0, -1.9};
       }
     }();
     std::uniform_real_distribution<> dist(min_offset, max_offset);
@@ -388,67 +387,73 @@ private:
     }
 
 
-    spawnRoadParkingVehicles(176671, randomInt(4, 4), DIRECTION::CENTER);  // unstable
-    spawnRoadParkingVehicles(176640, randomInt(4, 4), DIRECTION::CENTER);  // unstable
+    spawnRoadParkingVehicles(513, randomInt(1, 4), DIRECTION::LEFT);  // unstable
+    // spawnRoadParkingVehicles(176671, randomInt(4, 4), DIRECTION::CENTER);  // unstable
+    // spawnRoadParkingVehicles(176640, randomInt(4, 4), DIRECTION::CENTER);  // unstable
 
-    // やりたいこと
-    // 特定のlane_idの200m以内になったら、回避対象をspawn（位置はランダム、数もランダム）
-    spawnRoadParkingVehicles(176148, randomInt(0, 4), DIRECTION::LEFT);  // unstable
-    spawnRoadParkingVehicles(176193, randomInt(0, 4), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(1501, randomInt(0, 4), DIRECTION::RIGHT);
-    // spawnRoadParkingVehicles(174069, randomInt(1, 4), DIRECTION::CENTER);  // 路肩は非対応
-    // spawnRoadParkingVehicles(1262, randomInt(1, 4), DIRECTION::RIGHT);  // 右駐車は避けれん
-    spawnRoadParkingVehicles(1265, randomInt(1, 4), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(1278, randomInt(1, 2), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(179398, randomInt(1, 2), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(190784, randomInt(0, 1), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(190797, randomInt(0, 1), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(1513, randomInt(1, 2), DIRECTION::CENTER);
-    spawnRoadParkingVehicles(1468, randomInt(1, 2), DIRECTION::CENTER);
-    spawnRoadParkingVehicles(178766, randomInt(0, 1), DIRECTION::LEFT);
-    spawnRoadParkingVehicles(179473, randomInt(0, 1), DIRECTION::LEFT);
+    // // やりたいこと
+    // // 特定のlane_idの200m以内になったら、回避対象をspawn（位置はランダム、数もランダム）
+    // spawnRoadParkingVehicles(176148, randomInt(0, 4), DIRECTION::LEFT);  // unstable
+    // spawnRoadParkingVehicles(176193, randomInt(0, 4), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(1501, randomInt(0, 4), DIRECTION::RIGHT);
+    // // spawnRoadParkingVehicles(174069, randomInt(1, 4), DIRECTION::CENTER);  // 路肩は非対応
+    // // spawnRoadParkingVehicles(1262, randomInt(1, 4), DIRECTION::RIGHT);  // 右駐車は避けれん
+    // spawnRoadParkingVehicles(1265, randomInt(1, 4), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(1278, randomInt(1, 2), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(179398, randomInt(1, 2), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(190784, randomInt(0, 1), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(190797, randomInt(0, 1), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(1513, randomInt(1, 2), DIRECTION::CENTER);
+    // spawnRoadParkingVehicles(1468, randomInt(1, 2), DIRECTION::CENTER);
+    // spawnRoadParkingVehicles(178766, randomInt(0, 1), DIRECTION::LEFT);
+    // spawnRoadParkingVehicles(179473, randomInt(0, 1), DIRECTION::LEFT);
     
     
     
     // 特定のlane_idの200m以内になったら、移動物体をspawn（位置はランダム、数もランダム）
-    // spawnAndMoveToGoal(176261, 176175, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(350, 163, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(350, 1506, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1482, 38, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1483, 38, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1484, 39, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1501, 40, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(32, 38, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(33, 39, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(34, 40, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1314, 41, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(94, 41, MIN_VEL, MAX_VEL);
+    spawnAndMoveToGoal(541, 888, MIN_VEL, MAX_VEL);
+    spawnAndMoveToGoal(541, 888, MIN_VEL, MAX_VEL);
+    spawnAndMoveToGoal(517, 888, MIN_VEL, MAX_VEL);
+    spawnAndMoveToGoal(517, 888, MIN_VEL, MAX_VEL);
+    // // spawnAndMoveToGoal(176261, 176175, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(350, 163, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(350, 163, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(350, 1506, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1482, 38, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1483, 38, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1484, 39, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1501, 40, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(32, 38, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(33, 39, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(34, 40, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1314, 41, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(94, 41, MIN_VEL, MAX_VEL);
     
-    spawnAndMoveToGoal(175378, 174994, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1263, 106, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1265, 178001, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1153, 94, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(178233, 179475, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(175378, 174994, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1263, 106, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1265, 178001, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1153, 94, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(178233, 179475, MIN_VEL, MAX_VEL);
 
-    spawnAndMoveToGoal(74, 84, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(75, 83, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(75, 178573, MIN_VEL, MAX_VEL);
-    spawnAndMoveToGoal(1483, 1500, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(74, 84, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(75, 83, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(75, 178573, MIN_VEL, MAX_VEL);
+    // spawnAndMoveToGoal(1483, 1500, MIN_VEL, MAX_VEL);
 
 
-    // 特定のlane_idの200m以内になったら、信号を時間ごとに変える。
-    updateRandomTrafficLightColor({10584}, {10589}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10324, 190343}, {10316, 10322}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10352}, {10356, 10359}, tl_state_manager_.getCurrentState());
-    // updateRandomTrafficLightColor({179285, 10284}, {10293, 10283}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10269, 10276}, {10263, 10277}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10247, 10261}, {10249}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10237, 10236}, {10238}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10546, 10549}, {10551}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10562, 10564}, {10556}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10575, 10569}, {10571, 10581}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10610, 10598}, {10604}, tl_state_manager_.getCurrentState());
-    updateRandomTrafficLightColor({10342}, {10343}, tl_state_manager_.getCurrentState());
+    // // 特定のlane_idの200m以内になったら、信号を時間ごとに変える。
+    // updateRandomTrafficLightColor({10584}, {10589}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10324, 190343}, {10316, 10322}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10352}, {10356, 10359}, tl_state_manager_.getCurrentState());
+    // // updateRandomTrafficLightColor({179285, 10284}, {10293, 10283}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10269, 10276}, {10263, 10277}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10247, 10261}, {10249}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10237, 10236}, {10238}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10546, 10549}, {10551}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10562, 10564}, {10556}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10575, 10569}, {10571, 10581}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10610, 10598}, {10604}, tl_state_manager_.getCurrentState());
+    // updateRandomTrafficLightColor({10342}, {10343}, tl_state_manager_.getCurrentState());
 
     
     // 特定のlane_idの200m以内になったら、横断歩道歩行者をspawn（速度は毎回ランダム、人数はspawnで抽選、数秒ごとにspawnを止める）
@@ -466,14 +471,14 @@ private:
 
     params_ = param_listener_->get_params();
 
-    const auto spawn_pose = api_.canonicalize(constructLaneletPose(176126, 10, 0, 0, 0, 0));
+    const auto spawn_pose = api_.canonicalize(constructLaneletPose(534, 10, 0, 0, 0, 0));
     const auto goal_poses = [&](const std::vector<lanelet::Id> lane_ids) {
       std::vector<traffic_simulator::CanonicalizedLaneletPose> poses;
       for (const auto id : lane_ids) {
-        poses.push_back(api_.canonicalize(constructLaneletPose(id, 0, 0, 0, 0, 0)));
+        poses.push_back(api_.canonicalize(constructLaneletPose(id, 200, 0, 0, 0, 0)));
       }
       return poses;
-    }({40, 179398, 1467, 179335});
+    }({881});
 
     spawnEgoEntity(spawn_pose, goal_poses, getVehicleParameters());
 

@@ -97,7 +97,8 @@ bool EntityManager::despawnEntity(const std::string & name)
 
 bool EntityManager::entityExists(const std::string & name)
 {
-  return entities_.find(name) != std::end(entities_);
+  auto entity = entities_.find(name);
+  return entity != std::end(entities_) && entity->second->getEntityType().type != DeletedEntity::ENTITY_TYPE_ID;
 }
 
 auto EntityManager::getBoundingBoxDistance(const std::string & from, const std::string & to)
@@ -112,7 +113,7 @@ auto EntityManager::getCurrentTime() const noexcept -> double { return current_t
 auto EntityManager::getDistanceToCrosswalk(
   const std::string & name, const lanelet::Id target_crosswalk_id) -> std::optional<double>
 {
-  if (entities_.find(name) == entities_.end()) {
+  if (!entityExists(name)) {
     return std::nullopt;
   }
   if (getWaypoints(name).waypoints.empty()) {
@@ -126,7 +127,7 @@ auto EntityManager::getDistanceToCrosswalk(
 auto EntityManager::getDistanceToStopLine(
   const std::string & name, const lanelet::Id target_stop_line_id) -> std::optional<double>
 {
-  if (entities_.find(name) == entities_.end()) {
+  if (!entityExists(name)) {
     return std::nullopt;
   }
   if (getWaypoints(name).waypoints.empty()) {
@@ -152,10 +153,10 @@ auto EntityManager::getEntityNames() const -> const std::vector<std::string>
 
 auto EntityManager::getEntityStatus(const std::string & name) const -> CanonicalizedEntityStatus
 {
-  if (const auto iter = entities_.find(name); iter == entities_.end()) {
+  if (!entityExists(name)) {
     THROW_SEMANTIC_ERROR("entity ", std::quoted(name), " does not exist.");
   } else {
-    auto entity_status = static_cast<EntityStatus>(iter->second->getStatus());
+    auto entity_status = static_cast<EntityStatus>(entities_.find(name)->second->getStatus());
     assert(entity_status.name == name && "The entity name in status is different from key!");
     entity_status.action_status.current_action = getCurrentAction(name);
     entity_status.time = current_time_;
@@ -775,14 +776,18 @@ void EntityManager::update(const double current_time, const double step_time)
   auto type_list = getEntityTypeList();
   std::unordered_map<std::string, CanonicalizedEntityStatus> all_status;
   for (auto && [name, entity] : entities_) {
-    all_status.emplace(name, entity->getStatus());
+    if(entity->getEntityType().type != DeletedEntity::ENTITY_TYPE_ID){
+      all_status.emplace(name, entity->getStatus());
+    }
   }
   for (auto && [name, entity] : entities_) {
     entity->setOtherStatus(all_status);
   }
   all_status.clear();
   for (auto && [name, entity] : entities_) {
-    all_status.emplace(name, updateNpcLogic(name, type_list));
+    if(entity->getEntityType().type != DeletedEntity::ENTITY_TYPE_ID){
+      all_status.emplace(name, updateNpcLogic(name, type_list));
+    }
   }
   for (auto && [name, entity] : entities_) {
     entity->setOtherStatus(all_status);

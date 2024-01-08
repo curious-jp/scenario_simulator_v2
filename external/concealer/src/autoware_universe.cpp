@@ -148,14 +148,14 @@ auto AutowareUniverse::updateVehicleState() -> void
   }());
 }
 
-auto AutowareUniverse::getGearCommand() const -> autoware_auto_vehicle_msgs::msg::GearCommand
+auto AutowareUniverse::getGearCommand() const -> autoware_vehicle_msgs::msg::GearCommand
 {
   return getGearCommandImpl();
 }
 
 auto AutowareUniverse::getGearSign() const -> double
 {
-  using autoware_auto_vehicle_msgs::msg::GearCommand;
+  using autoware_vehicle_msgs::msg::GearCommand;
   return getGearCommand().command == GearCommand::REVERSE or
              getGearCommand().command == GearCommand::REVERSE_2
            ? -1.0
@@ -164,7 +164,7 @@ auto AutowareUniverse::getGearSign() const -> double
 
 auto AutowareUniverse::getVehicleCommand() const -> std::tuple<
   autoware_auto_control_msgs::msg::AckermannControlCommand,
-  autoware_auto_vehicle_msgs::msg::GearCommand>
+  autoware_vehicle_msgs::msg::GearCommand>
 {
   return std::make_tuple(getAckermannControlCommand(), getGearCommand());
 }

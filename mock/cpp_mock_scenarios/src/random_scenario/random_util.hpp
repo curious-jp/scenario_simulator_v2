@@ -10,13 +10,14 @@ using traffic_simulator::helper::constructLaneletPose;
 using traffic_simulator::lane_change::Direction;
 using TLColor = traffic_simulator::TrafficLight::Color::Value;
 
-constexpr double MIN_VEL = 10.0;
-constexpr double MAX_VEL = 20.0;
+
 
 enum class DIRECTION {
   CENTER,
   LEFT,
   RIGHT,
+  VERY_LEFT,
+  VERY_RIGHT
 };
 
 template <typename StateType>

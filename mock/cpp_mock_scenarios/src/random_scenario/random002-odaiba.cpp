@@ -394,8 +394,8 @@ private:
     // === 以下、egoが特定のレーンに近づいたらNPCを生成する ===
 
     // 静止物体を生成。位置はランダム、数もランダム。
-    spawnRoadParkingVehicles(176671, randomInt(4, 4), DIRECTION::CENTER);  // unstable
-    spawnRoadParkingVehicles(176640, randomInt(4, 4), DIRECTION::CENTER);  // unstable
+    spawnRoadParkingVehicles(176671, randomInt(4, 4), DIRECTION::VERY_LEFT);  // unstable
+    spawnRoadParkingVehicles(176640, randomInt(4, 4), DIRECTION::VERY_LEFT);  // unstable
     spawnRoadParkingVehicles(176148, randomInt(0, 4), DIRECTION::LEFT);  // unstable
     spawnRoadParkingVehicles(176193, randomInt(0, 4), DIRECTION::LEFT);
     // spawnRoadParkingVehicles(1501, randomInt(0, 4), DIRECTION::RIGHT);  // stuck多し

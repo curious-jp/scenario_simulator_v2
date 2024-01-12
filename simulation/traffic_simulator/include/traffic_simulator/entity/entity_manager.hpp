@@ -32,6 +32,7 @@
 #include <traffic_simulator/api/configuration.hpp>
 #include <traffic_simulator/data_type/lane_change.hpp>
 #include <traffic_simulator/data_type/speed_change.hpp>
+#include <traffic_simulator/entity/deleted_entity.hpp>
 #include <traffic_simulator/entity/ego_entity.hpp>
 #include <traffic_simulator/entity/entity_base.hpp>
 #include <traffic_simulator/entity/misc_object_entity.hpp>
@@ -116,6 +117,7 @@ class EntityManager
 
   const std::shared_ptr<TrafficLightManager> v2i_traffic_light_manager_ptr_;
   const std::shared_ptr<TrafficLightMarkerPublisher> v2i_traffic_light_marker_publisher_ptr_;
+  const std::shared_ptr<TrafficLightPublisherBase> v2i_traffic_light_legacy_topic_publisher_ptr_;
   const std::shared_ptr<TrafficLightPublisherBase> v2i_traffic_light_publisher_ptr_;
   ConfigurableRateUpdater v2i_traffic_light_updater_, conventional_traffic_light_updater_;
 
@@ -179,13 +181,17 @@ public:
     v2i_traffic_light_manager_ptr_(std::make_shared<TrafficLightManager>(hdmap_utils_ptr_)),
     v2i_traffic_light_marker_publisher_ptr_(
       std::make_shared<TrafficLightMarkerPublisher>(v2i_traffic_light_manager_ptr_, node)),
-    v2i_traffic_light_publisher_ptr_(
+    v2i_traffic_light_legacy_topic_publisher_ptr_(
       makeV2ITrafficLightPublisher("/v2x/traffic_signals", node, hdmap_utils_ptr_)),
+    v2i_traffic_light_publisher_ptr_(makeV2ITrafficLightPublisher(
+      "/perception/traffic_light_recognition/external/traffic_signals", node, hdmap_utils_ptr_)),
     v2i_traffic_light_updater_(
       node,
       [this]() {
         v2i_traffic_light_marker_publisher_ptr_->publish();
         v2i_traffic_light_publisher_ptr_->publish(
+          clock_ptr_->now(), v2i_traffic_light_manager_ptr_->generateUpdateTrafficLightsRequest());
+        v2i_traffic_light_legacy_topic_publisher_ptr_->publish(
           clock_ptr_->now(), v2i_traffic_light_manager_ptr_->generateUpdateTrafficLightsRequest());
       }),
     conventional_traffic_light_updater_(
@@ -231,13 +237,27 @@ public:
     v2i_traffic_light_updater_.resetUpdateRate(rate);
   }
 
+  auto setConventionalTrafficLightConfidence(lanelet::Id id, double confidence) -> void
+  {
+    for (auto & traffic_light : conventional_traffic_light_manager_ptr_->getTrafficLights(id)) {
+      traffic_light.get().confidence = confidence;
+    }
+  }
+
+// clang-format off
 #define FORWARD_TO_HDMAP_UTILS(NAME)                                  \
+  /*!                                                                 \
+   @brief Forward to arguments to the HDMapUtils::NAME function.      \
+   @return return value of the HDMapUtils::NAME function.             \
+   @note This function was defined by FORWARD_TO_HDMAP_UTILS macro.   \
+   */                                                                 \
   template <typename... Ts>                                           \
   decltype(auto) NAME(Ts &&... xs) const                              \
   {                                                                   \
     return hdmap_utils_ptr_->NAME(std::forward<decltype(xs)>(xs)...); \
   }                                                                   \
   static_assert(true, "")
+  // clang-format on
 
   FORWARD_TO_HDMAP_UTILS(getLaneletLength);
   FORWARD_TO_HDMAP_UTILS(toLaneletPose);
@@ -245,15 +265,22 @@ public:
 
 #undef FORWARD_TO_HDMAP_UTILS
 
-#define FORWARD_TO_ENTITY(IDENTIFIER, ...)                                     \
-  template <typename... Ts>                                                    \
-  decltype(auto) IDENTIFIER(const std::string & name, Ts &&... xs) __VA_ARGS__ \
-  try {                                                                        \
-    return entities_.at(name)->IDENTIFIER(std::forward<decltype(xs)>(xs)...);  \
-  } catch (const std::out_of_range &) {                                        \
-    THROW_SEMANTIC_ERROR("entity : ", name, "does not exist");                 \
-  }                                                                            \
+// clang-format off
+#define FORWARD_TO_ENTITY(IDENTIFIER, ...)                                       \
+  /*!                                                                            \
+   @brief Forward to arguments to the EntityBase::IDENTIFIER function.           \
+   @return return value of the EntityBase::IDENTIFIER function.                  \
+   @note This function was defined by FORWARD_TO_ENTITY macro.    　  　　　　　   \
+   */                                                                            \
+  template <typename... Ts>                                                      \
+  decltype(auto) IDENTIFIER(const std::string & name, Ts &&... xs) __VA_ARGS__   \
+  try {                                                                          \
+    return entities_.at(name)->IDENTIFIER(std::forward<decltype(xs)>(xs)...);    \
+  } catch (const std::out_of_range &) {                                          \
+    THROW_SEMANTIC_ERROR("entity : ", name, "does not exist");                   \
+  }                                                                              \
   static_assert(true, "")
+  // clang-format on
 
   FORWARD_TO_ENTITY(asFieldOperatorApplication, const);
   FORWARD_TO_ENTITY(cancelRequest, );
